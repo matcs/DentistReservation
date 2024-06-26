@@ -7,7 +7,4 @@ public class CreateChairCommand(string description, int number, DateTime from, D
 {
     public string Description { get; } = description;
     public int Number { get; } = number;
-    public DateTime From { get; } = from;
-
-    public DateTime Until { get; } = until;
 }

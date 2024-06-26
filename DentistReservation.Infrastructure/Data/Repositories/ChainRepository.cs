@@ -15,12 +15,4 @@ public class ChainRepository(ApplicationDbContext context)
     {
         return _dbSet.AnyAsync(r => r.Number == number, cancellationToken);
     }
-
-    public Task<bool> FindByNumberAndStartDateAsync(int number, DateTime from,
-        CancellationToken cancellationToken = default)
-    {
-        return _dbSet.AnyAsync(r =>
-                r.Number == number || r.From >= from || r.Until <= from
-            , cancellationToken);
-    }
 }

@@ -13,18 +13,15 @@ public class CreateChairCommandHandler(IChairRepository chairRepository)
         CancellationToken cancellationToken)
     {
         var existingReservation =
-            await chairRepository.FindByNumberAndStartDateAsync(request.Number, request.From, cancellationToken);
+            await chairRepository.FindByNumberAsync(request.Number, cancellationToken);
 
         if (existingReservation)
-        {
-            var existingNumber = await chairRepository.FindByNumberAsync(request.Number, cancellationToken);
+            return ChairErrors.ReservationAlreadyExistsNumber;
 
-            return existingNumber
-                ? ChairErrors.ReservationAlreadyExistsNumber
-                : ChairErrors.ReservationAlreadyExists;
-        }
-
-        var reservation = Chair.CreateInstance(request.Description, request.Number, request.From, request.Until);
+        var reservation = Chair.CreateInstance(
+            request.Description,
+            request.Number,
+            8, 0, 18, 0, 45, 10);
 
         var reservationValidator = new ChairValidator();
 

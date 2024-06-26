@@ -23,13 +23,13 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "dentistreservation.api:dev"
     ports:
-    - "127.0.0.1:57003:57100"
-    - "127.0.0.1:57203:57300"
+    - "127.0.0.1:57005:57100"
+    - "127.0.0.1:57205:57300"
     volumes:
     - "/home/matheuscosta/.nuget/packages:/home/app/.nuget/packages"
     - "/home/matheuscosta/RiderProjects/DentistReservation/DentistReservation.Api:/app:rw"
     - "/home/matheuscosta/RiderProjects/DentistReservation:/src:rw"
     - "/home/matheuscosta/.local/share/JetBrains/RiderRemoteDebugger/2024.1/Linux64:/opt/rider-debugger"
     - "/home/matheuscosta/Downloads/JetBrains Rider-2023.3.4/bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "/home/matheuscosta/.cache/JetBrains/Rider2024.1/log/DebuggerWorker/JetBrains.Debugger.Worker.2024_6_26_08_34_08:/var/opt/rider-debugger:rw"
+    - "/home/matheuscosta/.cache/JetBrains/Rider2024.1/log/DebuggerWorker/JetBrains.Debugger.Worker.2024_6_26_17_29_16:/var/opt/rider-debugger:rw"
     working_dir: "/app"
