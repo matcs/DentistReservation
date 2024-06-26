@@ -1,0 +1,22 @@
+﻿services:
+  dentistreservation.api:
+    image: dentistreservation.api
+    build:
+      context: .
+      dockerfile: DentistReservation.Api/Dockerfile
+    ports:
+      - 5002:8080
+    depends_on:
+      - dentistreservation.db
+        
+  dentistreservation.db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'DentistReservation'
+      MYSQL_USER: 'user'
+      MYSQL_TCP_PORT: 3307
+      MYSQL_ROOT_PASSWORD: pass@word123!@#
+    ports:
+      - 3307:3307
+    
