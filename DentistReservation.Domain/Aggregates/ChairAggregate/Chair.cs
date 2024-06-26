@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using DentistReservation.Domain.Abstractions;
+using DentistReservation.Domain.Aggregates.ChairAggregate.Reservations;
 using DentistReservation.Domain.SharedKernel;
 
 namespace DentistReservation.Domain.Aggregates.ChairAggregate;
@@ -10,20 +11,23 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
     public int Number { get; private set; }
 
-    public int StartHour { get; }
+    public int StartHour { get; private set; }
 
-    public int StartMinute { get; }
+    public int StartMinute { get; private set; }
 
-    public int EndHour { get; }
+    public int EndHour { get; private set; }
 
-    public int EndMinute { get; }
+    public int EndMinute { get; private set; }
 
-    public int AverageDuration { get; set; }
+    public int AverageDuration { get; private set; }
 
-    public int AverageSetupInMinutes { get; }
+    public int AverageSetupInMinutes { get; private set; }
+
     public List<Reservation> Reservations { get; }
 
-    public Chair(
+    private int NecessaryTimeInMinutes => AverageSetupInMinutes + AverageDuration;
+
+    private Chair(
         string? description, int number,
         int startHour, int startMinute,
         int endHour, int endMinute,
@@ -53,10 +57,8 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
         return reservation.Id;
     }
 
-    public Reservation? AddAutomaticReservation()
+    public Reservation AddAutomaticReservation()
     {
-        var necessaryTimeInMinutes = AverageSetupInMinutes + AverageDuration;
-
         var reservations =
             Reservations
                 .OrderBy(r => r.From)
@@ -64,51 +66,15 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
         var reservation = new Reservation(Id, Number);
 
-        if (reservations.Count == 0)
-        {
-            var startHour = DateTime.Today
-                .AddHours(StartHour)
-                .AddMinutes(StartMinute);
+        SearchForAValidateReservation(0, reservations, out DateTime from, out DateTime until);
 
-            reservation.SetFromUntil(
-                from: startHour,
-                until: startHour.AddMinutes(necessaryTimeInMinutes));
+        if (from.Hour >= StartHour || until.Hour <= EndHour && reservations.Count > 0)
+        {
+            reservation.SetFromUntil(from, until);
         }
-        else if (reservations.Count == 1)
+        else
         {
-            reservation.SetFromUntil(
-                from: reservations[0].Until,
-                until: reservations[0].Until.AddMinutes(necessaryTimeInMinutes));
-        }
-        else if (reservations.Count > 1)
-        {
-            for (int index = 0; index < Reservations.Count; index++)
-            {
-                if (index == Reservations.Count - 1)
-                {
-                    var lastReservation = reservations[index];
-                    reservation.SetFromUntil(
-                        lastReservation.Until,
-                        lastReservation.Until.AddMinutes(necessaryTimeInMinutes));
-                    break;
-                }
-
-                var currentReservation = reservations[index];
-                var nextReservation = reservations[index + 1];
-
-                var timeSpan = currentReservation.From.Subtract(nextReservation.From);
-
-                var difference = (int)timeSpan.TotalMinutes;
-
-                if (difference <= necessaryTimeInMinutes)
-                    continue;
-
-                var from = currentReservation.From.AddMinutes(AverageSetupInMinutes);
-                var until = from.AddMinutes(AverageDuration);
-
-                reservation.SetFromUntil(from, until);
-                break;
-            }
+            // ForwardDay(reservations, reservation);
         }
 
         Reservations.Add(reservation);
@@ -116,10 +82,74 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
         return reservation;
     }
 
+    private bool SearchForAValidateReservation(int dayOfTheYear, List<Reservation> reservations,
+        out DateTime from, out DateTime until)
+    {
+        from = new DateTime();
+        until = new DateTime();
+
+        DateTime referenceDay = DateTime.Today;
+
+        bool hasValidReservationForToday = false;
+
+        if (reservations.Count == 0)
+        {
+            FirstOfTheDay(out from, out until, referenceDay);
+
+            hasValidReservationForToday = true;
+        }
+
+        if (reservations.Count == 1)
+        {
+            SameDay(reservations[0], out from, out until);
+
+            hasValidReservationForToday = true;
+        }
+
+        if (reservations.Count > 1)
+        {
+            for (int index = 0; index < Reservations.Count; index++)
+            {
+                if (index == Reservations.Count - 1)
+                {
+                    var lastReservation = reservations[index];
+
+                    SameDay(lastReservation, out from, out until);
+
+                    hasValidReservationForToday = true;
+                    break;
+                }
+            }
+        }
+
+        return hasValidReservationForToday;
+    }
+
+    private void SameDay(Reservation reservation, out DateTime from, out DateTime until)
+    {
+        from = reservation.Until;
+        until = reservation.Until.AddMinutes(NecessaryTimeInMinutes);
+    }
+
+    private void FirstOfTheDay(out DateTime from, out DateTime until, DateTime referenceDay)
+    {
+        var startHour = referenceDay
+            .AddHours(StartHour)
+            .AddMinutes(StartMinute);
+
+        from = startHour;
+        until = startHour.AddMinutes(NecessaryTimeInMinutes);
+    }
+
+    public bool HasAnyAvailableReservations()
+    {
+        return SearchForAValidateReservation(0, Reservations, out _, out _);
+    }
+
     public static Chair CreateInstance(
         string description, int number,
         int startHour, int startMinute,
-        int endHour, int endMinute, 
+        int endHour, int endMinute,
         int averageDuration, int averageSetupInMinutes)
     {
         return new Chair(
@@ -127,5 +157,19 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
             startHour, startMinute,
             endHour, endMinute,
             averageDuration, averageSetupInMinutes);
+    }
+
+    public void Update(string description, int number, int startHour, int startMinute, int endHour, int endMinute,
+        int averageDuration, int averageSetupInMinutes)
+    {
+        Description = description;
+        Number = number;
+        StartHour = startHour;
+        StartMinute = startMinute;
+        EndHour = endHour;
+        EndMinute = endMinute;
+        AverageSetupInMinutes = averageSetupInMinutes;
+        AverageDuration = averageDuration;
+        Description = description;
     }
 }

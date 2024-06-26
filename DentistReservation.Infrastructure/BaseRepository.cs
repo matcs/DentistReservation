@@ -22,6 +22,18 @@ public class BaseRepository<TEntity, TKey>(ApplicationDbContext context) :
         return _dbSet.FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
     }
 
+    public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        context.Entry(entity).State = EntityState.Modified;
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        context.Entry(entity).State = EntityState.Deleted;
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
     public Task<List<TEntity>> ListAsync(int pageIndex, int pageSize, CancellationToken cancellationToken)
     {
         var result = _dbSet

@@ -1,8 +1,9 @@
-using DentistReservation.Application.Chairs.Responses;
+using DentistReservation.Domain.Aggregates.ChairAggregate.DTOs;
 
 namespace DentistReservation.Application.Chairs.Commands;
 
-public class CreateChairCommand(
+public class UpdateChairCommand(
+    Guid id,
     string description,
     int number,
     int startHour,
@@ -10,9 +11,9 @@ public class CreateChairCommand(
     int endHour,
     int endMinute,
     int averageDuration,
-    int averageSetupInMinutes)
-    : IRequest<Result<CreateChairResponse, Error>>
+    int averageSetupInMinutes) : IRequest<Result<ChairDto, Error>>
 {
+    public Guid Id { get; } = id;
     public string Description { get; } = description;
     public int Number { get; } = number;
     public int StartHour { get; } = startHour;

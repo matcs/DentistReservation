@@ -1,14 +1,13 @@
-using DentistReservation.Application.Reservations.Commands;
-using DentistReservation.Application.Reservations.Responses;
-using DentistReservation.Domain.Aggregates.ChairAggregate;
-using DentistReservation.Domain.Aggregates.ChairAggregate.Errors;
+using DentistReservation.Domain.Aggregates.ChairAggregate.Reservations;
 
 namespace DentistReservation.Application.Reservations.Handlers;
 
-public class AutoCreateReservationCommandHandler(IChairRepository chairRepository)
-    : IRequestHandler<AutoCreateReservationCommand, Result<AutoCreateReservationResponse, Error>>
+public class AutoCreateReservationCommandHandler(
+    IChairRepository chairRepository,
+    IReservationRepository reservationRepository)
+    : IRequestHandler<AutoCreateReservationCommand, Result<CreateReservationResponse, Error>>
 {
-    public async Task<Result<AutoCreateReservationResponse, Error>> Handle(AutoCreateReservationCommand request,
+    public async Task<Result<CreateReservationResponse, Error>> Handle(AutoCreateReservationCommand request,
         CancellationToken cancellationToken)
     {
         var chairs = await chairRepository.ListAsync(1, 100, cancellationToken);
@@ -16,27 +15,30 @@ public class AutoCreateReservationCommandHandler(IChairRepository chairRepositor
         if (chairs.Count is 0)
             return ChairErrors.NotFound;
 
-        var chairWithMostAvailableReservations = chairs.First();
+        var availableReservations = chairs
+            .Where(c => c.HasAnyAvailableReservations()).ToList();
 
-        foreach (var chair in chairs)
+        if (availableReservations.Count is 0)
+            return ChairErrors.NotFound;
+
+        var chairWithLowestReservation = availableReservations.First();
+
+        foreach (var chair in availableReservations)
         {
             var totalReservations = chair.Reservations.Count;
 
-            if (totalReservations < chairWithMostAvailableReservations.Reservations.Count)
-            {
-                chairWithMostAvailableReservations = chair;
-            }
+            if (totalReservations < chairWithLowestReservation.Reservations.Count)
+                chairWithLowestReservation = chair;
         }
 
-        var reservationId = chairWithMostAvailableReservations.AddAutomaticReservation();
+        var reservation = chairWithLowestReservation.AddAutomaticReservation();
 
-        if (reservationId is null)
-            return ChairErrors.NotFound;
-
-        return new AutoCreateReservationResponse(reservationId.Id,
-            chairWithMostAvailableReservations.Number,
-            reservationId.From,
-            reservationId.Until,
-            chairWithMostAvailableReservations.Reservations.Count);
+        await reservationRepository.AddAsync(reservation, cancellationToken);
+        
+        return new CreateReservationResponse(reservation.Id,
+            chairWithLowestReservation.Number,
+            reservation.From,
+            reservation.Until,
+            chairWithLowestReservation.Reservations.Count);
     }
 }

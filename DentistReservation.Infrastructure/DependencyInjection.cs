@@ -1,4 +1,5 @@
 using DentistReservation.Domain.Aggregates.ChairAggregate;
+using DentistReservation.Domain.Aggregates.ChairAggregate.Reservations;
 using DentistReservation.Domain.SharedKernel;
 using DentistReservation.Infrastructure.Data;
 using DentistReservation.Infrastructure.Data.Repositories;
@@ -30,5 +31,6 @@ public static class DependencyInjection
         
         services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
         services.AddTransient<IChairRepository, ChainRepository>();
+        services.AddTransient<IReservationRepository, ReservationRepository>();
     }
 }

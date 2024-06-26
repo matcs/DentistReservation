@@ -1,6 +1,6 @@
 using DentistReservation.Domain.Abstractions;
 
-namespace DentistReservation.Domain.Aggregates;
+namespace DentistReservation.Domain.Aggregates.ChairAggregate.Reservations;
 
 public class Reservation : BaseEntity<Guid>
 {
@@ -15,14 +15,15 @@ public class Reservation : BaseEntity<Guid>
     public Reservation(Guid aggregateRootId, int reservationChairNumber)
     {
         Id = Guid.NewGuid();
-        
         ReservationChairNumber = reservationChairNumber;
         AggregateRootId = aggregateRootId;
     }
 
-    public void SetFromUntil(DateTime from, DateTime until)
+    public Reservation SetFromUntil(DateTime from, DateTime until)
     {
         From = from;
         Until = until;
+
+        return this;
     }
 }
