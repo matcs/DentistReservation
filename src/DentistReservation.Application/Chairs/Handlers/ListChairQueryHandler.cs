@@ -1,6 +1,4 @@
 using DentistReservation.Application.Chairs.Queries;
-using DentistReservation.Domain.Aggregates.ChairAggregate;
-using DentistReservation.Domain.Aggregates.ChairAggregate.DTOs;
 using DentistReservation.Domain.Aggregates.ChairAggregate.Reservations;
 
 namespace DentistReservation.Application.Chairs.Handlers;

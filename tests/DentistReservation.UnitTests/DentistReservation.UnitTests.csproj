@@ -24,6 +24,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\DentistReservation.Application\DentistReservation.Application.csproj" />
+      <ProjectReference Include="..\..\src\DentistReservation.Application\DentistReservation.Application.csproj" />
+      <ProjectReference Include="..\..\src\DentistReservation.Domain\DentistReservation.Domain.csproj" />
     </ItemGroup>
 
 </Project>
