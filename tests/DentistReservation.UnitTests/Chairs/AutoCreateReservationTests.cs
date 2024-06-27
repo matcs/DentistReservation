@@ -60,7 +60,6 @@ public class AutoCreateReservationTests
             _reservationRepository.Object);
 
         var result = await handler.Handle(command, default);
-        await handler.Handle(command, default);
 
         result.HasError.Should().BeFalse();
         result.Value?.ReservationId.Should().NotBe(Guid.Empty);

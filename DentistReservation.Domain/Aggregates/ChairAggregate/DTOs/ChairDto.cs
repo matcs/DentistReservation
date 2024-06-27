@@ -17,7 +17,7 @@ public class ChairDto
     public int AverageDuration { get; private set; }
 
     public int AverageSetupInMinutes { get; private set; }
-
+    public int TotalReservations => Reservations.Count(); 
     public IEnumerable<ReservationDto> Reservations { get; private set; }
 
     public static implicit operator ChairDto(Chair chair)
