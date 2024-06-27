@@ -22,7 +22,7 @@ public static class DependencyInjection
 
         var connectionString = configuration.GetConnectionString("DentistReservationDb");
 
-        var serverVersion = new MySqlServerVersion(new Version(8, 0, 0));
+        var serverVersion = new MySqlServerVersion(new Version(8, 0, 37));
 
         services.AddDbContext<ApplicationDbContext>(
             dbContextOptions => dbContextOptions

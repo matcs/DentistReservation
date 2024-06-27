@@ -1,11 +1,4 @@
 {
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*",
   "ConnectionStrings": {
     "DentistReservationDb": "Server=dentistreservation.db; Port=3306; Database=DentistReservation; Uid=root; Pwd=pass@word123!@#;SslMode=Preferred;"
   }

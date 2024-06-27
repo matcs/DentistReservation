@@ -23,7 +23,7 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
     public int AverageSetupInMinutes { get; private set; }
 
-    private readonly List<Reservation> _reservations;
+    private readonly List<Reservation> _reservations = new();
 
     public IReadOnlyCollection<Reservation> Reservations => _reservations.AsReadOnly();
 
