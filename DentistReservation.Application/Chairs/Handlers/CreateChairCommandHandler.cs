@@ -1,7 +1,4 @@
-using DentistReservation.Application.Chairs.Commands;
 using DentistReservation.Application.Chairs.Responses;
-using DentistReservation.Domain.Aggregates.ChairAggregate;
-using DentistReservation.Domain.Aggregates.ChairAggregate.Errors;
 using DentistReservation.Domain.Aggregates.ChairAggregate.Validators;
 
 namespace DentistReservation.Application.Chairs.Handlers;
