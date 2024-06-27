@@ -155,6 +155,7 @@ public class AutoCreateReservationTests
 
         chairOne.AddAutomaticReservation();
         chairOne.AddAutomaticReservation();
+        chairOne.AddAutomaticReservation();
 
         _chairRepository.Setup(cr => cr.ListAsync(
             It.IsAny<int>(),

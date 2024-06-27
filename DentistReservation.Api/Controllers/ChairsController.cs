@@ -1,3 +1,5 @@
+using DentistReservation.Application.Reservations.Commands;
+
 namespace DentistReservation.Api.Controllers;
 
 [ApiController]
@@ -85,10 +87,22 @@ public class ChairsController(ISender sender) : ControllerBase
     {
         var request = new DeleteChairCommand(id);
         var response = await sender.Send(request);
-        
+
         if (response.HasError)
             return BadRequest(response.Error);
 
         return NoContent();
+    }
+
+    [HttpPost("auto-allocate-chair-reservation")]
+    public async Task<ActionResult> AutoAllocateChairReservation()
+    {
+        var request = new AutoCreateReservationCommand();
+        var response = await sender.Send(request);
+
+        if (response.HasError)
+            return BadRequest(response.Error);
+
+        return Created("", response.Value);
     }
 }

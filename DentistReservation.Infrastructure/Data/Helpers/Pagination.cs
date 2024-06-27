@@ -1,8 +1,8 @@
 namespace DentistReservation.Infrastructure.Data.Helpers;
 
-public class Pagination(int pageIndex, int pageSize)
+public record Pagination(int PageIndex, int PageSize)
 {
-    public int PageIndex { get; } = pageIndex;
+    public int PageIndex { get; } = PageIndex;
     
-    public int PageSize { get; } = pageSize;
+    public int PageSize { get; } = PageSize;
 }

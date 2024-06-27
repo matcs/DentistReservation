@@ -10,11 +10,14 @@ public class AutoCreateReservationCommandHandler(
     public async Task<Result<CreateReservationResponse, Error>> Handle(AutoCreateReservationCommand request,
         CancellationToken cancellationToken)
     {
-        var chairs = await chairRepository.ListAsync(1, 100, cancellationToken);
+        var chairs = await chairRepository.ListAsync(0, 100, cancellationToken);
 
         if (chairs.Count is 0)
-            return ChairErrors.NotFound;
-        
+            return ChairErrors.IsEmpty;
+
+        foreach (var chair in chairs)
+            await SetReservation(chair, cancellationToken);
+
         var chairWithLowestReservation = chairs.First();
 
         foreach (var chair in chairs)
@@ -28,11 +31,17 @@ public class AutoCreateReservationCommandHandler(
         var reservation = chairWithLowestReservation.AddAutomaticReservation();
 
         await reservationRepository.AddAsync(reservation, cancellationToken);
-        
+
         return new CreateReservationResponse(reservation.Id,
             chairWithLowestReservation.Number,
             reservation.From,
             reservation.Until,
             chairWithLowestReservation.Reservations.Count);
+    }
+
+    private async Task SetReservation(Chair chair, CancellationToken cancellationToken)
+    {
+        var result = await reservationRepository.ListByChairId(chair.Id, cancellationToken);
+        chair.Reservations = result;
     }
 }

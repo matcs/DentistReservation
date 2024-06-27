@@ -22,24 +22,80 @@ namespace DentistReservation.Infrastructure.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("DentistReservation.Domain.Aggregates.BookingAggregate.Reservation", b =>
+            modelBuilder.Entity("DentistReservation.Domain.Aggregates.ChairAggregate.Chair", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<int>("AverageDuration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AverageSetupInMinutes")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("EndHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EndMinute")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StartHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StartMinute")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Chair");
+                });
+
+            modelBuilder.Entity("DentistReservation.Domain.Aggregates.ChairAggregate.Reservations.Reservation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AggregateRootId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("From")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ReservationChairNumber")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Until")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AggregateRootId");
+
                     b.ToTable("Reservation");
+                });
+
+            modelBuilder.Entity("DentistReservation.Domain.Aggregates.ChairAggregate.Reservations.Reservation", b =>
+                {
+                    b.HasOne("DentistReservation.Domain.Aggregates.ChairAggregate.Chair", "Chair")
+                        .WithMany("Reservations")
+                        .HasForeignKey("AggregateRootId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chair");
+                });
+
+            modelBuilder.Entity("DentistReservation.Domain.Aggregates.ChairAggregate.Chair", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

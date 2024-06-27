@@ -11,7 +11,9 @@ public class Reservation : BaseEntity<Guid>
     public DateTime From { get; private set; }
 
     public DateTime Until { get; private set; }
-
+    
+    public Chair Chair { get; private set; }
+    
     public Reservation(Guid aggregateRootId, int reservationChairNumber)
     {
         Id = Guid.NewGuid();

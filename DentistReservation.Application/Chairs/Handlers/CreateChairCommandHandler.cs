@@ -16,9 +16,9 @@ public class CreateChairCommandHandler(IChairRepository chairRepository)
             await chairRepository.GetByNumberAsync(request.Number, cancellationToken);
 
         if (existingReservation is not null)
-            return ChairErrors.ReservationAlreadyExistsNumber;
+            return ChairErrors.HasAlreadyExistingNumberNumber;
 
-        var reservation = Chair.CreateInstance(
+        var chair = Chair.CreateInstance(
             request.Description,
             request.Number,
             request.StartHour,
@@ -30,17 +30,18 @@ public class CreateChairCommandHandler(IChairRepository chairRepository)
 
         var reservationValidator = new ChairValidator();
 
-        var validationResult = await reservationValidator.ValidateAsync(reservation, cancellationToken);
+        var validationResult = await reservationValidator.ValidateAsync(chair, cancellationToken);
 
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors.Select(s => s.ErrorMessage).ToArray();
-            return new Error("Could not create reservation", string.Join(",", errors));
+            return new Error("Could not create chair", "One or more error occurred", errors);
+
         }
 
-        await chairRepository.AddAsync(reservation, cancellationToken);
+        await chairRepository.AddAsync(chair, cancellationToken);
 
-        CreateChairResponse response = reservation;
+        CreateChairResponse response = chair;
 
         return response;
     }

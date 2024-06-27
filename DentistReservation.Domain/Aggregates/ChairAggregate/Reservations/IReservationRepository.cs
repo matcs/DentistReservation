@@ -6,4 +6,6 @@ public interface IReservationRepository : IBaseRepository<Reservation, Guid>
 {
     Task<bool> CheckIfReservationIsAvailableReservationAsync(int chairNumber, DateTime from, DateTime until,
         CancellationToken cancellationToken = default);
+
+    Task<List<Reservation>> ListByChairId(Guid chairId, CancellationToken cancellationToken = default);
 }

@@ -12,4 +12,9 @@ public class ReservationRepository(ApplicationDbContext context)
         return _dbSet.AnyAsync(r => r.ReservationChairNumber == chairNumber || r.From >= from && r.Until <= until,
             cancellationToken);
     }
+
+    public async Task<List<Reservation>> ListByChairId(Guid chairId, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.Where(r => r.AggregateRootId.Equals(chairId)).ToListAsync(cancellationToken);
+    }
 }

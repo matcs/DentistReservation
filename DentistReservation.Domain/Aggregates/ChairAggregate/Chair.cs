@@ -23,9 +23,13 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
     public int AverageSetupInMinutes { get; private set; }
 
-    public List<Reservation> Reservations { get; }
+    public List<Reservation> Reservations { get; set; } = new List<Reservation>();
 
     private int NecessaryTimeInMinutes => AverageSetupInMinutes + AverageDuration;
+
+    public Chair()
+    {
+    }
 
     private Chair(
         string? description, int number,
