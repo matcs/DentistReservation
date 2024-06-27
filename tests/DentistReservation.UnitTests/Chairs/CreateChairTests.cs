@@ -35,10 +35,8 @@ public class CreateChairTests
     }
     
     [Theory]
-    [InlineData(10, 0, 9, 0)]
-    [InlineData(10, 60, 11, 0)]
-    [InlineData(10, 0, 24, 0)]
-    public async Task IfStartDateIsGreaterThanStartShouldNotCreate(
+    [InlineData(10, 0, 10, 30)]
+    public async Task IfAvailableTimeInMinutesGreaterThanNecessaryTimeInMinutesShouldNotCreate(
         int startHour,
         int startMinute,
         int endHour,
@@ -61,5 +59,32 @@ public class CreateChairTests
         var result = await handler.Handle(command, default);
 
         result.HasError.Should().BeTrue();
+    }
+    
+    [Theory]
+    [InlineData(10, 0, 11, 30)]
+    public async Task IfAvailableTimeInMinutesLessThanNecessaryTimeInMinutesShouldCreate(
+        int startHour,
+        int startMinute,
+        int endHour,
+        int endMinute)
+    {
+        var command = new CreateChairCommand(
+            "Description",
+            1,
+            startHour,
+            startMinute,
+            endHour,
+            endMinute,
+            60,
+            30
+        );
+        
+        var handler = new CreateChairCommandHandler(
+            _chairRepository.Object);
+
+        var result = await handler.Handle(command, default);
+
+        result.HasError.Should().BeFalse();
     }
 }

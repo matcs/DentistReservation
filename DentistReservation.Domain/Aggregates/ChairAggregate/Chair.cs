@@ -26,7 +26,8 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
     public IReadOnlyCollection<Reservation> Reservations => _reservations.AsReadOnly();
 
-    private int NecessaryTimeInMinutes => AverageSetupInMinutes + AverageDuration;
+    public int NecessaryTimeInMinutes => AverageSetupInMinutes + AverageDuration;
+    public int AvailableTimeInMinutes => (EndHour - StartHour) * 60 + StartMinute + EndMinute;
 
     public Chair()
     {

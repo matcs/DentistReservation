@@ -8,5 +8,7 @@
     &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.CreateChairTests.IfStartDateIsGreaterThanStartShouldNotCreate&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.CreateChairTests.ShouldCreateAChairSuccefully&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.ReadChairTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.CreateChairTests.IfAvailableTimeInMinutesGreaterThanNecessaryTimeInMinutesShouldNotCreate&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.CreateChairTests.IfAvailableTimeInMinutesLessThanNecessaryTimeInMinutesShouldCreate&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

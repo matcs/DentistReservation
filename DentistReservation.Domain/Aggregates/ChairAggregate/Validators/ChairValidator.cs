@@ -16,5 +16,7 @@ public class ChairValidator : AbstractValidator<Chair>
         RuleFor(c => c.AverageSetupInMinutes).GreaterThanOrEqualTo(0);
 
         RuleFor(c => c.EndHour).GreaterThan(c => c.StartHour);
+
+        RuleFor(c => c.AvailableTimeInMinutes).GreaterThanOrEqualTo(c => c.NecessaryTimeInMinutes);
     }
 }
