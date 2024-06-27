@@ -8,7 +8,7 @@ public class CreateChairTests
     private readonly Mock<IChairRepository> _chairRepository = new();
 
     [Fact]
-    public async Task ShouldCreateAChairSuccefully()
+    public async Task ShouldCreateAChairSuccessfully()
     {
         var command = new CreateChairCommand(
             "Description",
@@ -34,16 +34,23 @@ public class CreateChairTests
         result.HasError.Should().BeFalse();
     }
     
-    [Fact]
-    public async Task IfStartDateIsGreaterThanStartShouldNotCreate()
+    [Theory]
+    [InlineData(10, 0, 9, 0)]
+    [InlineData(10, 60, 11, 0)]
+    [InlineData(10, 0, 24, 0)]
+    public async Task IfStartDateIsGreaterThanStartShouldNotCreate(
+        int startHour,
+        int startMinute,
+        int endHour,
+        int endMinute)
     {
         var command = new CreateChairCommand(
             "Description",
             1,
-            10,
-            0,
-            9,
-            0,
+            startHour,
+            startMinute,
+            endHour,
+            endMinute,
             60,
             60
         );

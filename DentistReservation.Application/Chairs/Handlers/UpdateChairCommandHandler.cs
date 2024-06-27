@@ -1,7 +1,3 @@
-using DentistReservation.Application.Chairs.Commands;
-using DentistReservation.Domain.Aggregates.ChairAggregate;
-using DentistReservation.Domain.Aggregates.ChairAggregate.DTOs;
-using DentistReservation.Domain.Aggregates.ChairAggregate.Errors;
 using DentistReservation.Domain.Aggregates.ChairAggregate.Validators;
 
 namespace DentistReservation.Application.Chairs.Handlers;
@@ -16,11 +12,14 @@ public class UpdateChairCommandHandler(IChairRepository chairRepository)
         if (chair is null)
             return ChairErrors.NotFound;
 
-        var existingChair = await chairRepository.GetByNumberAsync(request.Number, cancellationToken);
+        if (request.Number != chair.Number)
+        {
+            var existingChair = await chairRepository.GetByNumberAsync(request.Number, cancellationToken);
 
-        if (existingChair is not null && !existingChair.Id.Equals(Guid.Empty))
-            return ChairErrors.HasAlreadyExistingNumberNumber;
-        
+            if (existingChair is not null && !existingChair.Id.Equals(Guid.Empty))
+                return ChairErrors.HasAlreadyExistingNumberNumber;
+        }
+
         chair.Update(
             request.Description,
             request.Number,
