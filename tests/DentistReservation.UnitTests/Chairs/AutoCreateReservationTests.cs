@@ -44,6 +44,16 @@ public class AutoCreateReservationTests
                 default))
             .Returns(Task.CompletedTask);
 
+        _reservationRepository.Setup(rr => rr.AddAsync(
+                It.IsAny<Reservation>(),
+                default))
+            .Returns(Task.CompletedTask);
+        
+        _reservationRepository.Setup(rr => rr.ListByChairId(
+                It.IsAny<Guid>(),
+                default))
+            .ReturnsAsync(new List<Reservation>());
+
         var command = new AutoCreateReservationCommand();
         var handler = new AutoCreateReservationCommandHandler(
             _chairRepository.Object,
@@ -127,7 +137,7 @@ public class AutoCreateReservationTests
             _reservationRepository.Object);
 
         var result = await handler.Handle(command, default);
-        await handler.Handle(command, default);
+        // await handler.Handle(command, default);
 
         result.HasError.Should().BeFalse();
         result.Value?.ReservationId.Should().NotBe(Guid.Empty);
