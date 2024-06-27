@@ -2,5 +2,10 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fa2c8ace_002Db77e_002D4c46_002D8f5f_002Dc0b3fe2e39d5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AutoCreateReservationTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.AutoCreateReservationTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.UpdateChairTests.NegativeNumberForTimeShouldNotUpdate&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.UpdateChairTests.PositiveNumberForTimeShouldNotUpdate&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.UpdateChairTests.PositiveNumberForTimeShouldUpdate&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.CreateChairTests.IfStartDateIsGreaterThanStartShouldNotCreate&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::6AFAEE06-AE23-4A76-82A7-90E6B438CDA8::net8.0::DentistReservation.UnitTests.Chairs.CreateChairTests.ShouldCreateAChairSuccefully&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
