@@ -41,7 +41,10 @@ public class AutoCreateReservationCommandHandler(
 
     private async Task SetReservation(Chair chair, CancellationToken cancellationToken)
     {
-        var result = await reservationRepository.ListByChairId(chair.Id, cancellationToken);
-        chair.Reservations = result;
+        if (chair.Reservations.Count == 0)
+        {
+            var result = await reservationRepository.ListByChairId(chair.Id, cancellationToken);
+            chair.AddReservations(result);
+        }
     }
 }

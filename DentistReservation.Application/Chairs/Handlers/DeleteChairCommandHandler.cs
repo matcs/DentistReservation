@@ -15,7 +15,7 @@ public class DeleteChairCommandHandler(
         if (chair is null)
             return ChairErrors.NotFound;
 
-        chair.Reservations = await reservationRepository.ListByChairId(chair.Id, cancellationToken);
+        chair.AddReservations(await reservationRepository.ListByChairId(chair.Id, cancellationToken));
 
         if (chair.Reservations.Any(r => r.From > DateTime.Now))
             return ChairErrors.ThereReservationsAlready;

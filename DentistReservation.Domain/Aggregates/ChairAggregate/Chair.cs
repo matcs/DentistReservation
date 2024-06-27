@@ -23,7 +23,9 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
     public int AverageSetupInMinutes { get; private set; }
 
-    public List<Reservation> Reservations { get; set; } = new List<Reservation>();
+    private readonly List<Reservation> _reservations;
+
+    public IReadOnlyCollection<Reservation> Reservations => _reservations.AsReadOnly();
 
     private int NecessaryTimeInMinutes => AverageSetupInMinutes + AverageDuration;
 
@@ -35,8 +37,7 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
         string? description, int number,
         int startHour, int startMinute,
         int endHour, int endMinute,
-        int averageDuration, int averageSetupInMinutes,
-        List<Reservation>? reservations = null)
+        int averageDuration, int averageSetupInMinutes)
     {
         Id = Guid.NewGuid();
         Number = number;
@@ -47,18 +48,12 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
         AverageSetupInMinutes = averageSetupInMinutes;
         AverageDuration = averageDuration;
         Description = description;
-        Reservations = reservations ?? [];
+        _reservations = [];
     }
 
-    public Guid AddReservation(DateTime from, DateTime until)
+    public void AddReservations(List<Reservation> reservations)
     {
-        var reservation = new Reservation(Id, Number);
-
-        reservation.SetFromUntil(from, until);
-
-        Reservations.Add(reservation);
-
-        return reservation.Id;
+        _reservations.AddRange(reservations);
     }
 
     public Reservation AddAutomaticReservation()
@@ -82,7 +77,7 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
         reservation.SetFromUntil(from, until);
 
-        Reservations.Add(reservation);
+        _reservations.Add(reservation);
 
         return reservation;
     }
@@ -144,11 +139,6 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
         from = startHour;
         until = startHour.AddMinutes(NecessaryTimeInMinutes);
-    }
-
-    public bool HasAnyAvailableReservations()
-    {
-        return SearchForAValidateReservation(0, Reservations, out _, out _);
     }
 
     public static Chair CreateInstance(

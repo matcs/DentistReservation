@@ -17,7 +17,7 @@ public class GetChairQueryHandler(IChairRepository chairRepository, IReservation
         if (chair is null)
             return ChairErrors.NotFound;
 
-        chair.Reservations = await reservationRepository.ListByChairId(chair.Id, cancellationToken);
+        chair.AddReservations(await reservationRepository.ListByChairId(chair.Id, cancellationToken));
         
         ChairDto chairDto = chair;
 
