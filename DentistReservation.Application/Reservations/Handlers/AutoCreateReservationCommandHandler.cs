@@ -14,16 +14,10 @@ public class AutoCreateReservationCommandHandler(
 
         if (chairs.Count is 0)
             return ChairErrors.NotFound;
+        
+        var chairWithLowestReservation = chairs.First();
 
-        var availableReservations = chairs
-            .Where(c => c.HasAnyAvailableReservations()).ToList();
-
-        if (availableReservations.Count is 0)
-            return ChairErrors.NotFound;
-
-        var chairWithLowestReservation = availableReservations.First();
-
-        foreach (var chair in availableReservations)
+        foreach (var chair in chairs)
         {
             var totalReservations = chair.Reservations.Count;
 

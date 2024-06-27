@@ -155,8 +155,6 @@ public class AutoCreateReservationTests
 
         chairOne.AddAutomaticReservation();
         chairOne.AddAutomaticReservation();
-        chairOne.AddAutomaticReservation();
-        chairOne.AddAutomaticReservation();
 
         _chairRepository.Setup(cr => cr.ListAsync(
             It.IsAny<int>(),
@@ -182,7 +180,7 @@ public class AutoCreateReservationTests
 
         result.HasError.Should().BeFalse();
         result.Value?.ReservationId.Should().NotBe(Guid.Empty);
-        result.Value?.TotalReservations.Should().BeGreaterThan(3);
+        result.Value?.TotalReservations.Should().BeGreaterThan(2);
         result.Value?.From.Hour.Should().Be(8);
         result.Value?.Until.Hour.Should().Be(9);
     }

@@ -68,14 +68,15 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
 
         SearchForAValidateReservation(0, reservations, out DateTime from, out DateTime until);
 
-        if (from.Hour >= StartHour || until.Hour <= EndHour && reservations.Count > 0)
+        if (from.Hour >= EndHour)
         {
-            reservation.SetFromUntil(from, until);
+            var lastDay = Reservations.Max(r => r.From.DayOfYear);
+            var skipDays = lastDay + 1;
+            DateTime dateTime = new DateTime(DateTime.UtcNow.Year, 1, 1).AddDays(lastDay);
+            FirstOfTheDay(out from, out until, dateTime);
         }
-        else
-        {
-            // ForwardDay(reservations, reservation);
-        }
+
+        reservation.SetFromUntil(from, until);
 
         Reservations.Add(reservation);
 

@@ -19,7 +19,7 @@ public class CreateReservationCommandHandler(
             await reservationRepository.CheckIfReservationIsAvailableReservationAsync(
                 request.ChairNumber,
                 request.From,
-                request.Until);
+                request.Until, cancellationToken);
 
         if (!isAvailable)
             throw new NotImplementedException();
