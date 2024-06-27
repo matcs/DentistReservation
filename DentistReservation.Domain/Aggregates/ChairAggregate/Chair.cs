@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using DentistReservation.Domain.Abstractions;
 using DentistReservation.Domain.Aggregates.ChairAggregate.Reservations;
 using DentistReservation.Domain.SharedKernel;
@@ -70,7 +69,6 @@ public class Chair : BaseEntity<Guid>, IAggregateRoot
         if (from.Hour >= EndHour)
         {
             var lastDay = Reservations.Max(r => r.From.DayOfYear);
-            var skipDays = lastDay + 1;
             DateTime dateTime = new DateTime(DateTime.UtcNow.Year, 1, 1).AddDays(lastDay);
             FirstOfTheDay(out from, out until, dateTime);
         }
