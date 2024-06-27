@@ -11,3 +11,5 @@
   cd DentistReservation 
   docker compose up --no-deps --build
 ```
+Será possível realizar os testes dos endpoints pelo swagger através da url 
+http://localhost:5002/swagger/index.html
