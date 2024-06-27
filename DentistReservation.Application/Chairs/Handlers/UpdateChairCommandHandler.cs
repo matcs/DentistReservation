@@ -16,6 +16,11 @@ public class UpdateChairCommandHandler(IChairRepository chairRepository)
         if (chair is null)
             return ChairErrors.NotFound;
 
+        var existingChair = await chairRepository.GetByNumberAsync(request.Number, cancellationToken);
+
+        if (existingChair is not null && !existingChair.Id.Equals(Guid.Empty))
+            return ChairErrors.HasAlreadyExistingNumberNumber;
+        
         chair.Update(
             request.Description,
             request.Number,
